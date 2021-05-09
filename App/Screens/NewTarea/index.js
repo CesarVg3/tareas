@@ -7,10 +7,12 @@ import * as actions from '../../Store/tareas/actions';
 
 class New extends Component {
     onSubmit = async (values) => {
+        // La fecha se generará en milisegundos
         const now = new Date().getTime();
         let lat = '';
         let long = '';
 
+        // Obtenemos las coordenadas
         await GetLocation.getCurrentPosition({
             enableHighAccuracy: true
         }).then(location => {
@@ -21,6 +23,7 @@ class New extends Component {
             console.warn(code, message);
         });
 
+        // Se crea el objeto que se mandará a guardar
         const data = {
             name: values.name,
             status: parseInt(values.status),

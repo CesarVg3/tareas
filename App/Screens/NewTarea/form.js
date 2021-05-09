@@ -1,17 +1,28 @@
 import React, { Component } from 'react';
-import { Button, View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import RNPickerSelect from 'react-native-picker-select';
 import { validate } from './validate';
+import { Button, LoadingButton } from '../../Components'
 
 class Form extends Component {
 
     renderButton = (handleSubmit, errors) => {
+        const { loading } = this.props;
+        // Verificamos los errores para habilitar el boton
         var disabledBtn = Object.keys(errors).length == 0 ? false : true;
+        if (loading) {
+            return (
+                <LoadingButton/>
+            )
+        }
+
         return (
-            <Button onPress={handleSubmit} title="Guardar" disabled={disabledBtn} />
+            <Button onPress={handleSubmit} disabled={disabledBtn}>
+                Guardar
+            </Button>
         );
     };
 
@@ -22,6 +33,8 @@ class Form extends Component {
             { value: '2', label: 'Completado' },
             { value: '3', label: 'Cancelado' },
         ];
+
+        // Utilizamos formik para realzar los formularios
         return (
             <View>
                 <Formik
@@ -31,7 +44,7 @@ class Form extends Component {
                     validateOnBlur
                     validateOnMount
                 >
-                    {({ handleChange, handleSubmit, setFieldTouched, setFieldValue,
+                    {({ handleChange, handleSubmit, setFieldTouched,
                         onBlur, values, errors, touched }) => (
                         <View>
                             <KeyboardAwareScrollView
@@ -101,7 +114,7 @@ const styles = StyleSheet.create({
     }
 });
 
-
+// Styles por default para el selector de Estatus
 const pickerStyle = {
     inputIOS: {
         fontSize: 19,
@@ -124,7 +137,8 @@ const mapStateToProps = ({ tareasReducer }) => {
         name: '',
         status: ''
     };
-    return { tareasReducer, initialValues };
+    const { tareas, loading } = tareasReducer;
+    return { tareas, loading, initialValues };
 };
 
 export default connect(mapStateToProps)(Form);

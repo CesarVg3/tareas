@@ -8,10 +8,12 @@ import { values } from 'lodash';
 
 class Edit extends Component {
     onSubmit = async (values) => {
+        // La fecha se generará en milisegundos
         const now = new Date().getTime();
         let lat = '';
         let long = '';
 
+        // Obtenemos las coordenadas
         await GetLocation.getCurrentPosition({
             enableHighAccuracy: true
         }).then(location => {
@@ -22,6 +24,7 @@ class Edit extends Component {
             console.warn(code, message);
         });
 
+        // Se crea el objeto que se mandará a guardar, la fecha de creación no se modifica
         const data = {
             name: values.name,
             status: parseInt(values.status),
@@ -31,7 +34,7 @@ class Edit extends Component {
             location: lat + ',' + long
         };
 
-        this.props.updateTarea(data);
+        await this.props.updateTarea(data);
         this.props.navigation.goBack();
     }
 

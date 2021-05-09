@@ -1,10 +1,10 @@
 import React from 'react';
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
-import { Platform } from 'react-native';
 import Home from '../Screens/Home';
 import New from '../Screens/NewTarea';
 import Edit from '../Screens/Edit';
 
+// Creamos el stack y añadimos solo las 3 vistas que utilizaremos.
 const Stack = createStackNavigator();
 
 function RootStack() {
@@ -20,11 +20,11 @@ function RootStack() {
                 component={Home}
             />
             <Stack.Screen
-                name="New"
+                name="Nueva"
                 component={New}
             />
             <Stack.Screen
-                name="Edit"
+                name="Editar"
                 component={Edit}
             />
         </Stack.Navigator>

@@ -9,12 +9,10 @@ const { persistor, store } = configureStore();
 
 export default class App extends Component {
   render() {
+    // Se utilizó @react-navigation para la nevegación
     return (
       <Provider store={store}>
-        <PersistGate
-          loading={null}
-          persistor={persistor}
-        >
+        <PersistGate persistor={persistor} >
           <NavigationContainer>
             <Navigation />
           </NavigationContainer>

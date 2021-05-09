@@ -1,27 +1,40 @@
 import React, { Component } from 'react';
-import { Button, View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Linking, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import RNPickerSelect from 'react-native-picker-select';
 import { validate } from './validate';
+import { Button, LoadingButton } from '../../Components'
 
 class FormEdit extends Component {
 
     renderButton = (handleSubmit, errors) => {
+        const { loading } = this.props;
+        // Verificamos los errores para habilitar el boton
         var disabledBtn = Object.keys(errors).length == 0 ? false : true;
-        return (
-            <Button onPress={handleSubmit} title="Guardar" disabled={disabledBtn} />
-        );
+        if (loading) {
+            return (
+                <LoadingButton />
+            );
+        } else {
+            return (
+                <Button onPress={handleSubmit} disabled={disabledBtn}>
+                    Guardar
+                </Button>
+            );
+        }
     };
 
     render() {
-        const { inputStyle, inputContainer, buttonStyle } = styles;
+        const { inputStyle, inputContainer, buttonStyle, locationView, textLocation } = styles;
         const options = [
             { value: '1', label: 'Activo' },
             { value: '2', label: 'Completado' },
             { value: '3', label: 'Cancelado' },
         ];
+        // Utilizamos formik para realzar los formularios
+        // Los valores iniciales los tomaremos de los parámetros que se pasaron por la ruta
         const initialValues = this.props.params;
 
         return (
@@ -74,7 +87,14 @@ class FormEdit extends Component {
                                     <Text>Fecha de creación:
                                         {' ' + new Date(parseInt(values.createdDate)).toLocaleString()}
                                     </Text>
-                                    <Text>Ubicación: {values.location}</Text>
+                                    {/* Se añadió la opción para abrir en maps */}
+                                    <View style={locationView}>
+                                        <Text>Ubicación: </Text>
+                                        <TouchableOpacity onPress={() =>
+                                            Linking.openURL('https://www.google.com/maps/search/?api=1&query=' + values.location)}>
+                                            <Text style={textLocation}>{values.location}</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                                 <View style={buttonStyle}>
                                     {this.renderButton(handleSubmit, errors)}
@@ -106,6 +126,13 @@ const styles = StyleSheet.create({
         height: 50,
         paddingLeft: 15,
         fontSize: 16,
+    },
+    locationView: {
+        flexDirection: 'row',
+    },
+    textLocation: {
+        textDecorationLine: 'underline',
+        color: 'blue'
     }
 });
 
@@ -132,7 +159,8 @@ const mapStateToProps = ({ tareasReducer }) => {
         name: '',
         status: ''
     };
-    return { tareasReducer, initialValues };
+    const { loading } = tareasReducer;
+    return { loading, tareasReducer, initialValues };
 };
 
 export default connect(mapStateToProps)(FormEdit);

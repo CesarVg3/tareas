@@ -1,22 +1,23 @@
 
 import React, { PureComponent } from 'react';
-import { View, StyleSheet, Platform, Text, TouchableHighlight } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, TouchableHighlight, Linking } from 'react-native';
 
 class card extends PureComponent {
     onPressCard = () => {
-        this.props.navigation.navigate("Edit", this.props.item);
+        this.props.navigation.navigate("Editar", this.props.item);
     }
 
     render() {
         const { item } = this.props;
-        const { container, card, header, title, containerTitle, statusCircle, toBlinkCenter } = styles;
+        const { container, card, header, title, containerTitle, statusCircle, toBlinkCenter,
+            locationView, textLocation, body, subtitle } = styles;
         var dateFormat = require('dateformat');
         var cdate = new Date(parseInt(item.createdDate));
-        var createdDate = dateFormat(cdate, "dd/mm/yyyy, h:MM:ss TT");
+        var createdDate = dateFormat(cdate, "dd/mm/yyyy, h:MM TT");
         var udate = item.updateDate ?
             new Date(parseInt(item.updateDate))
             : null;
-        var updateDate = dateFormat(udate, "dd/mm/yyyy, h:MM:ss TT");
+        var updateDate = dateFormat(udate, "dd/mm/yyyy, h:MM TT");
 
         return (
             <View style={container}>
@@ -29,29 +30,44 @@ class card extends PureComponent {
                             <View style={statusCircle}>
                                 <View style={[toBlinkCenter, {
                                     backgroundColor: item.status === 1
-                                        ? 'green'
+                                        ? '#7ED321'
                                         : item.status === 2
-                                            ? 'blue'
-                                            : 'red'
+                                            ? '#4A90E2'
+                                            : '#F65656'
                                 }]} />
                             </View>
                         </View>
-                        <Text>Estatus: {
-                            item.status === 1 ? ' Activo'
-                                : item.status === 2 ? ' Completado'
-                                    : item.status === 3 ? ' Cancelado' : null
-                        }
-                        </Text>
-                        <Text>Fecha de creación: {createdDate}</Text>
+                        <View style={body}>
+                            <Text style={subtitle}>Estatus: </Text>
+                            <Text>{
+                                item.status === 1 ? ' Activo'
+                                    : item.status === 2 ? ' Completado'
+                                        : item.status === 3 ? ' Cancelado' : null
+                            }
+                            </Text>
+                        </View>
+                        <View style={body}>
+                            <Text style={subtitle}>Fecha de creación: </Text>
+                            <Text>{createdDate}</Text>
+                        </View>
                         {
                             (udate) ?
-                                <Text>Fecha de actualización: {updateDate}</Text>
+                                <View style={body}>
+                                    <Text style={subtitle}>Fecha de actualización: </Text>
+                                    <Text>{updateDate}</Text>
+                                </View>
                                 : null
                         }
-                        <Text>Ubicación: {item.location}</Text>
+                        <View style={locationView}>
+                            <Text style={subtitle}>Ubicación: </Text>
+                            <TouchableOpacity onPress={() =>
+                                Linking.openURL('https://www.google.com/maps/search/?api=1&query=' + item.location)}>
+                                <Text style={textLocation}>{item.location}</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </TouchableHighlight>
-            </View>
+            </View >
         );
     }
 }
@@ -79,9 +95,13 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
+        borderBottomWidth: 0.5,
+        paddingBottom: 5,
+        marginBottom: 5
     },
     title: {
-        fontSize: 18,
+        fontSize: 17,
+        fontWeight: 'bold',
     },
     statusCircle: {
         flexDirection: 'row',
@@ -93,6 +113,22 @@ const styles = StyleSheet.create({
         height: 14,
         borderRadius: 7
     },
+    body: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    subtitle: {
+        fontSize: 15,
+        fontWeight: 'bold',
+    },
+    locationView: {
+        flexDirection: 'row',
+    },
+    textLocation: {
+        textDecorationLine: 'underline',
+        color: 'blue'
+    },
+
 });
 
 export default card;
