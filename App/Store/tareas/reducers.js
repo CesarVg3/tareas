@@ -15,7 +15,7 @@ const initialState = {
         {
             id: 1,
             name: 'Tarea dos',
-            status: 3,
+            status: 1,
             createdDate: 1620541713870,
             updateDate: '',
             location: '20.715449, -103.384317'

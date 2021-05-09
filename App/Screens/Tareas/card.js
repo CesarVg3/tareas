@@ -10,10 +10,13 @@ class card extends PureComponent {
     render() {
         const { item } = this.props;
         const { container, card, header, title, containerTitle, statusCircle, toBlinkCenter } = styles;
-        var cdate = new Date(parseInt(item.createdDate)).toLocaleString();
+        var dateFormat = require('dateformat');
+        var cdate = new Date(parseInt(item.createdDate));
+        var createdDate = dateFormat(cdate, "dd/mm/yyyy, h:MM:ss TT");
         var udate = item.updateDate ?
-            new Date(parseInt(item.updateDate)).toLocaleString()
+            new Date(parseInt(item.updateDate))
             : null;
+        var updateDate = dateFormat(udate, "dd/mm/yyyy, h:MM:ss TT");
 
         return (
             <View style={container}>
@@ -39,10 +42,10 @@ class card extends PureComponent {
                                     : item.status === 3 ? ' Cancelado' : null
                         }
                         </Text>
-                        <Text>Fecha de creación: {cdate}</Text>
+                        <Text>Fecha de creación: {createdDate}</Text>
                         {
                             (udate) ?
-                                <Text>Fecha de actualización: {udate}</Text>
+                                <Text>Fecha de actualización: {updateDate}</Text>
                                 : null
                         }
                         <Text>Ubicación: {item.location}</Text>
