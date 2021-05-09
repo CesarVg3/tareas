@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import GetLocation from 'react-native-get-location'
-import Form from './form';
+import FormEdit from './form';
 import * as actions from '../../Store/tareas/actions';
+import { values } from 'lodash';
 
-class New extends Component {
+class Edit extends Component {
     onSubmit = async (values) => {
         const now = new Date().getTime();
         let lat = '';
@@ -24,20 +25,20 @@ class New extends Component {
         const data = {
             name: values.name,
             status: parseInt(values.status),
-            // El id es "temporal", este se tomaría de la BD
-            id: Math.floor(Math.random() * (1000 - 10)) + 10,
-            createdDate: now,
+            id: values.id,
+            createdDate: values.createdDate,
+            updateDate: now,
             location: lat + ',' + long
         };
 
-        this.props.saveTarea(data);
+        this.props.updateTarea(data);
         this.props.navigation.goBack();
     }
 
     render() {
         return (
             <View>
-                <Form onSubmit={this.onSubmit} />
+                <FormEdit onSubmit={this.onSubmit} params={this.props.route.params} />
             </View>
         );
     }
@@ -58,4 +59,4 @@ const mapStateToProps = ({ tareasReducer }) => {
     return { tareasReducer };
 };
 
-export default connect(mapStateToProps, actions)(New);
+export default connect(mapStateToProps, actions)(Edit);

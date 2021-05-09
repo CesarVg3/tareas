@@ -12,7 +12,10 @@ export default class TareasList extends Component {
     keyExtractor = (item, index) => index.toString();
 
     renderItem = ({ item }) => (
-        <Card item={item} />
+        <Card
+            item={item}
+            navigation={this.props.navigation}
+        />
     );
 
     render() {

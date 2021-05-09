@@ -6,7 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import RNPickerSelect from 'react-native-picker-select';
 import { validate } from './validate';
 
-class Form extends Component {
+class FormEdit extends Component {
 
     renderButton = (handleSubmit, errors) => {
         var disabledBtn = Object.keys(errors).length == 0 ? false : true;
@@ -22,10 +22,12 @@ class Form extends Component {
             { value: '2', label: 'Completado' },
             { value: '3', label: 'Cancelado' },
         ];
+        const initialValues = this.props.params;
+
         return (
             <View>
                 <Formik
-                    initialValues={this.props.initialValues}
+                    initialValues={initialValues}
                     onSubmit={values => this.props.onSubmit(values)}
                     validate={values => validate(values)}
                     validateOnBlur
@@ -55,18 +57,24 @@ class Form extends Component {
                                 <View style={inputContainer}>
                                     <Text>Estatus</Text>
                                     <RNPickerSelect
+                                        name="status"
                                         placeholder={{
                                             label: "Selecciona un estatus",
                                             value: "null",
                                         }}
-                                        name="status"
                                         items={options}
                                         onValueChange={handleChange('status')}
                                         onClose={onBlur}
                                         style={pickerStyle}
-                                        value={values.status}
+                                        value={values.status.toString()}
                                         key={values.status}
                                     />
+                                </View>
+                                <View style={inputContainer}>
+                                    <Text>Fecha de creación:
+                                        {' ' + new Date(parseInt(values.createdDate)).toLocaleString()}
+                                    </Text>
+                                    <Text>Ubicación: {values.location}</Text>
                                 </View>
                                 <View style={buttonStyle}>
                                     {this.renderButton(handleSubmit, errors)}
@@ -127,4 +135,4 @@ const mapStateToProps = ({ tareasReducer }) => {
     return { tareasReducer, initialValues };
 };
 
-export default connect(mapStateToProps)(Form);
+export default connect(mapStateToProps)(FormEdit);

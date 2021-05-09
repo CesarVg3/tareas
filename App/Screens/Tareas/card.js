@@ -4,14 +4,12 @@ import { View, StyleSheet, Platform, Text, TouchableHighlight } from 'react-nati
 
 class card extends PureComponent {
     onPressCard = () => {
-        console.log("$ abrir tarjeta", this.props.item.id);
+        this.props.navigation.navigate("Edit", this.props.item);
     }
 
     render() {
         const { item } = this.props;
         const { container, card, header, title, containerTitle, statusCircle, toBlinkCenter } = styles;
-
-        console.log("$ itemms", item);
         var cdate = new Date(parseInt(item.createdDate)).toLocaleString();
         var udate = item.updateDate ?
             new Date(parseInt(item.updateDate)).toLocaleString()

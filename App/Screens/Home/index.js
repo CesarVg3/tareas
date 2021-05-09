@@ -39,7 +39,7 @@ class Home extends Component {
     render() {
         return (
             <SafeAreaView style={Colors.darker}>
-                <TareasList tareas={this.props.tareas} />
+                <TareasList tareas={this.props.tareas} navigation={this.props.navigation} />
             </SafeAreaView>
         );
     }
